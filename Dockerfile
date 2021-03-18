@@ -3,12 +3,13 @@ FROM debian:buster
 #=================================================APT INSTALL =================================================#
 
 RUN 			apt-get update \
+			#	apt-get upgrade -y \
 				&& apt-get install vim -y \
 				&& apt-get install nginx -y \
 				&& apt-get install wget -y \
 				&& apt-get install mariadb-server mariadb-client -y \
-			#	&& apt-get install open-ssl -y \
-				&& apt-get install php7.3 php-mysql php-fpm php-cli php-mbstring -y
+				&& apt-get install openssl -y \
+				&& apt-get install php7.3 php-mysql php-fpm php-cli php-mbstring php-xml -y
 			#	&& apt-get install zsh -y \
 			#	&& apt-get install git-all -y \
 			#	&& sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)" -y 
@@ -18,9 +19,9 @@ RUN 			apt-get update \
 RUN 			wget https://wordpress.org/latest.tar.gz \
 				&& wget https://files.phpmyadmin.net/phpMyAdmin/5.1.0/phpMyAdmin-5.1.0-all-languages.tar.gz
 
-#COPY			./srcs/nginx.conf /etc/nginx/sites-available/localhost
+COPY			./srcs/nginx.conf /etc/nginx/sites-available/localhost
 
-#RUN				ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/localhost
+RUN				ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/localhost
 
 RUN 			tar -xvf latest.tar.gz \ 
 				&& rm -rf latest.tar.gz \
@@ -35,5 +36,14 @@ RUN				ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
 
 #=================================================OTHER_STUFF=================================================#
 
+WORKDIR			/var/www/html/
 
-CMD				service nginx start && bash
+RUN 			chown -R www-data:www-data *
+RUN 			chmod 755 -R *
+
+CMD				service nginx start && service php7.3-fpm start && bash
+
+EXPOSE 			80 443
+
+
+# Generate Key ssl AND Mysql
