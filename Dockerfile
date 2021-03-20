@@ -2,7 +2,7 @@ FROM debian:buster
 
 #=================================================APT-GET INSTALL STUFF========================================#
 
-RUN 			apt-get update \
+RUN				apt-get update \
 				&& apt-get install vim -y \
 				&& apt-get install nginx -y \
 				&& apt-get install wget -y \
@@ -40,17 +40,16 @@ RUN				ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/local
 COPY 			./srcs/conf.sh 		/tmp/
 
 COPY 			./srcs/on_off.sh 	/tmp/  
-#copy in tmp ? Possibility of running on start ?
+
+#=================================================CONFIGURATION================================================#
+
+WORKDIR			/var/www/html/
 
 COPY			./srcs/config.inc.php 	phpmyadmin/
 
 COPY 			./srcs/wp-config.php 	wordpress/
 
 COPY            ./srcs/wordpress.sql 	/tmp/
-
-#=================================================CONFIGURATION================================================#
-
-WORKDIR			/var/www/html/
 
 RUN 			chown -R www-data:www-data *
 
