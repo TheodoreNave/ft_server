@@ -63,7 +63,3 @@ RUN				openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj '/C=FR/ST=75/L=
 CMD				bash /tmp/conf.sh
 
 EXPOSE 			80 443
-
-
-
-#Finish building my website ! Learn more about docker container for stopping some containers + Notion docker update
